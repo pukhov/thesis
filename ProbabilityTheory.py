@@ -14,8 +14,8 @@ class Function:
                  lambda_f,
                  bounds):
         self.lambda_f = lambda_f
-        self.left_bound = bounds[0] - EPS
-        self.right_bound = bounds[1] + EPS
+        self.left_bound = bounds[0]
+        self.right_bound = bounds[1]
     
     def __call__(self, x):
         x = np.asarray(x)
@@ -81,8 +81,9 @@ class UniformPDF(PDF):
         r = bounds[1]
         super().__init__(lambda x : 1. / (r - l), bounds)
 
+        
 def Derivative(function_with_call):
-    derivative = lambda x  : scipy.misc.derivative(function_with_call, x,  dx=1e-8)
+    derivative = lambda x  : scipy.misc.derivative(function_with_call, x,  dx=1e-4)
     return Function(lambda_f=derivative,
                           bounds=[function_with_call.left_bound,
                                   function_with_call.right_bound])
@@ -141,7 +142,7 @@ def PDF_to_CDF(f):
 
 def ExpectedValue(PDF_or_CDF):
     if isinstance(PDF_or_CDF, UniformPDF) or isinstance(PDF_or_CDF, UniformCDF):
-        print("uniform pdf called")
+#         print("uniform pdf called")
         return (PDF_or_CDF.left_bound + PDF_or_CDF.right_bound) / 2
     elif isinstance(PDF_or_CDF, PDF):
         PDF_of_f = PDF_or_CDF
